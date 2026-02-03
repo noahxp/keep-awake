@@ -1,0 +1,16 @@
+# Swift Package Manager
+.build/
+
+# Xcode
+*.xcodeproj/
+*.xcworkspace/
+.swiftpm/
+
+# macOS
+.DS_Store
+
+# Binary produced during development
+main
+
+# Claude Code local settings
+.claude/
