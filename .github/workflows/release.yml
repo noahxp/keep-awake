@@ -5,6 +5,11 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag name (e.g. v1.0.0)'
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -49,16 +54,22 @@ jobs:
           </plist>
           EOF
 
-      # Install create-dmg
-      - name: Install create-dmg
-        run: npm install -g create-dmg
-
-      # Package as DMG (auto-appends /Applications symlink)
+      # Package as DMG using hdiutil (no code signing required)
       - name: Package as DMG
-        run: create-dmg KeepAwake.app
+        run: |
+          mkdir -p /tmp/dmg-staging
+          cp -R "$GITHUB_WORKSPACE/KeepAwake.app" /tmp/dmg-staging/
+          ln -sf /Applications /tmp/dmg-staging/Applications
+          hdiutil create \
+            -volname "KeepAwake" \
+            -srcfolder /tmp/dmg-staging \
+            -ov \
+            -format UDZO \
+            -o "$GITHUB_WORKSPACE/KeepAwake.dmg"
 
       # Publish GitHub Release with DMG attachment
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tag || github.ref_name }}
           files: KeepAwake*.dmg
