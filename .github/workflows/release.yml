@@ -32,8 +32,9 @@ jobs:
       - name: Assemble .app bundle
         run: |
           APP_DIR="$GITHUB_WORKSPACE/KeepAwake.app"
-          mkdir -p "$APP_DIR/Contents/MacOS"
+          mkdir -p "$APP_DIR/Contents/MacOS" "$APP_DIR/Contents/Resources"
           cp .build/release/KeepAwake "$APP_DIR/Contents/MacOS/KeepAwake"
+          cp "$GITHUB_WORKSPACE/KeepAwake.icns" "$APP_DIR/Contents/Resources/KeepAwake.icns"
           cat > "$APP_DIR/Contents/Info.plist" <<'EOF'
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
@@ -45,6 +46,8 @@ jobs:
               <key>CFBundleIdentifier</key>
               <string>com.keepawake.app</string>
               <key>CFBundleName</key>
+              <string>KeepAwake</string>
+              <key>CFBundleIconFile</key>
               <string>KeepAwake</string>
               <key>LSBackgroundOnly</key>
               <true/>

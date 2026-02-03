@@ -13,11 +13,15 @@ BIN_PATH=$(swift build --show-bin-path)
 APP_DIR="$BIN_PATH/KeepAwake.app"
 CONTENTS="$APP_DIR/Contents"
 MACOS="$CONTENTS/MacOS"
+RESOURCES="$CONTENTS/Resources"
 
-mkdir -p "$MACOS"
+mkdir -p "$MACOS" "$RESOURCES"
 
 # Copy the binary
 cp "$BIN_PATH/KeepAwake" "$MACOS/KeepAwake"
+
+# Copy the app icon
+cp "$SCRIPT_DIR/KeepAwake.icns" "$RESOURCES/KeepAwake.icns"
 
 # Write Info.plist
 cat > "$CONTENTS/Info.plist" <<'EOF'
@@ -31,6 +35,8 @@ cat > "$CONTENTS/Info.plist" <<'EOF'
     <key>CFBundleIdentifier</key>
     <string>com.keepawake.app</string>
     <key>CFBundleName</key>
+    <string>KeepAwake</string>
+    <key>CFBundleIconFile</key>
     <string>KeepAwake</string>
     <key>LSBackgroundOnly</key>
     <true/>
